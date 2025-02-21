@@ -18,6 +18,17 @@
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
+
+
+#all-checkboxes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Adds spacing between tasks */
+}
+
+label {
+  display: block; /* Ensures each task appears on a new line */
+}
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);

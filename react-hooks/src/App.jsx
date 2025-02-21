@@ -3,51 +3,100 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
-function App() {
-  //initial state
- const [isVisible, setIsVisible] = useState(true)
 
- const [text, setText] = useState('hide text')
- const [prevUserText, setPevUserText] = useState("")
- 
- function changeText (){
+const initialTodos = [{id:0, title:'task 1'}, 
+ { id:1,
+  title:'task 2'},
 
-  setText(text === "show text" ? "hide text" : "show text")
- }
- //function
-  function handleClick(){
-    setIsVisible(!isVisible)
-    console.log('change text function',changeText())
-   changeText()
-  }
- 
+{ id:2,
+  title:'task 3'}
+];
+console.log('todos',initialTodos)
+function AddTodo () {
+  const [todos, setTodos] = useState(initialTodos);
+  const [title, setTitle] = useState('');
 
   return (
     <>
-      <div>
+     <input
+        placeholder="Add task"
+        value={title}
+        onChange={e => setTitle(e.target.value)}
+      />
+       <button onClick={() => {
+        setTitle('');
+        setTodos([{
+          id: todos.length,
+          title:title
+        },...todos]);
+      }}>Add</button>
+        <ul>
+        {todos.map(item => (
+          <Task key = {item.id} todo={item.title}/>
+          
+        ))}
+      </ul>
+    </>
+  )
+}
 
-      <button onClick={handleClick}>{text}</button>
-      {console.log('isVisible',isVisible)}
-    
+function Task ( { todo }) {
+  const [todoCheck, setTodoCheck] = useState(false)
+//todo = 'task1'
+
+let crossDeciderLocal
+let crossLocal = "line-through"
+let noCrossLocal = ""
+todoCheck ? crossDeciderLocal=crossLocal: crossDeciderLocal=noCrossLocal
+
+function handleChangeLocal(e) { 
+setTodoCheck(e.target.checked)
+}
+  return (
+  <label>
+        <input
+        type="checkbox"
+       
+        onChange={handleChangeLocal}
+      />
      
-      {isVisible &&             
-      <textarea 
-      value={prevUserText}
-      onChange={(e) => {
-      const prevUserText = e.target.value;
- 
-      setPevUserText(prevUserText);
-    }}
-    placeholder="Type something..."
-      
-      ></textarea>
-      
-      }
+        <span style={{textDecoration: crossDeciderLocal}}>{todo}</span>
+        
+        </label> 
+  )
+}
 
-       </div>        
-   
+function App() {
+ 
+  
+ 
+  return (
+    <>
+     
+     
+        
+    <div id="all-checkboxes">
+      
+      <AddTodo />
+        </div>      
+      
+     
+
+       
+     
+      
     </>
   )
 }
 
 export default App
+
+
+{
+  /*
+  #Problem: it checks everything at once 
+  #checking individual boxes 
+  # Make a function to cross text 
+  # Create a button to add items 
+  */
+}
