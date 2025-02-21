@@ -18,6 +18,12 @@ function AddTodo () {
 
   return (
     <>
+     <ul>
+        {todos.map(item => (
+          <Task key = {item.id} todo={item.title}/>
+          
+        ))}
+      </ul>
      <input
         placeholder="Add task"
         value={title}
@@ -25,17 +31,12 @@ function AddTodo () {
       />
        <button onClick={() => {
         setTitle('');
-        setTodos([{
+        setTodos([...todos,{
           id: todos.length,
           title:title
-        },...todos]);
+        }]);
       }}>Add</button>
-        <ul>
-        {todos.map(item => (
-          <Task key = {item.id} todo={item.title}/>
-          
-        ))}
-      </ul>
+       
     </>
   )
 }
