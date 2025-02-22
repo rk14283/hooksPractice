@@ -15,8 +15,8 @@ console.log('todos',initialTodos)
 function AddTodo () {
   const [todos, setTodos] = useState(initialTodos);
   const [title, setTitle] = useState('');
-  const [isEditing, setIsEditing] = useState(false);
-  let todoContent;
+
+  
   //id of todos
 const newId = todos.length > 0 ? Math.max(...todos.map(t => t.id)) + 1 : 0;
 
@@ -25,8 +25,34 @@ const newId = todos.length > 0 ? Math.max(...todos.map(t => t.id)) + 1 : 0;
     setTodos(todos.filter(todo => todo.id !== id));
   }
 
+  
   function editTodo(id) {
-
+    console.log('edit me', id)
+    let todoContentSave=  (
+      <>
+      
+      <label>
+            <input
+            type="checkbox"
+           
+          />
+            <span>{todos}</span>
+            </label> 
+          <div id="buttonsAddEdit">
+          
+            <button>Save</button>
+            </div>
+            </>
+        
+      )
+    
+  
+    return (
+      <>
+     
+      {todoContentSave}
+    </>
+    )
   }
   return (
     <>
@@ -35,6 +61,14 @@ const newId = todos.length > 0 ? Math.max(...todos.map(t => t.id)) + 1 : 0;
           <Task key = {item.id} todo={item.title} 
           deleteButton={() => deleteTodo(item.id)}
           editButton={() => editTodo(item.id)}
+          />)
+         
+        ))}
+        
+        {todos.map((item => (
+          <Task key = {item.id} todo={item.title} 
+          deleteButton={() => deleteTodo(item.id)}
+          saveButton={() => saveTodo(item.id)}
           />)
          
         ))}
@@ -58,23 +92,17 @@ const newId = todos.length > 0 ? Math.max(...todos.map(t => t.id)) + 1 : 0;
   )
 }
 
-function Task ( { todo , deleteButton, editButton }) {
+function Task ( { todo , deleteButton, editButton, saveButton }) {
   const [todoCheck, setTodoCheck] = useState(false)
+
   
-
-let crossDeciderLocal
-let crossLocal = "line-through"
-let noCrossLocal = ""
-todoCheck ? crossDeciderLocal=crossLocal: crossDeciderLocal=noCrossLocal
-
-function handleChangeLocal(e) { 
-setTodoCheck(e.target.checked)
-}
-
-
-  return (
-    <>
-   
+      let crossDeciderLocal
+          let crossLocal = "line-through"
+          let noCrossLocal = ""
+          todoCheck ? crossDeciderLocal=crossLocal: crossDeciderLocal=noCrossLocal
+  let todoContentEdit=  (
+  <>
+  
   <label>
         <input
         type="checkbox"
@@ -87,7 +115,70 @@ setTodoCheck(e.target.checked)
         <button onClick={editButton}>Edit</button>
         </div>
         </>
+    
   )
+  
+
+
+function handleChangeLocal(e) { 
+setTodoCheck(e.target.checked)
+}
+
+
+  return (
+    todoContentEdit
+  )
+}
+
+
+function SwitchSaveEdit ({ todos }) {
+  const [isEditing, setIsEditing] = useState(false);
+  let contentToDisplay
+
+  if (isEditing){
+    contentToDisplay =saveContent
+  }
+  let saveContent = (
+  <>
+      
+  <label>
+        <input
+        type="checkbox"
+       
+      />
+        <span>{todos}</span>
+        </label> 
+      <div id="buttonsAddEdit">
+      
+        <button>Save</button>
+        </div>
+        </>
+  )
+
+let editContent = (
+  <>
+      
+  <label>
+        <input
+        type="checkbox"
+       
+      />
+        <span>{todos}</span>
+        </label> 
+      <div id="buttonsAddEdit">
+      
+        <button>Edit</button>
+        </div>
+        </>
+
+)
+return (
+   
+  saveContent
+  
+
+)
+    
 }
 
 function App() {
@@ -101,9 +192,10 @@ function App() {
         
     <div id="all-checkboxes">
       
-      <AddTodo />
+     
+     
         </div>      
-      
+        <SwitchSaveEdit  todo={'tasknew'}/>
      
 
        
