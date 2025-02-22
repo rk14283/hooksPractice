@@ -25,7 +25,11 @@
   flex-direction: column;
   gap: 10px; /* Adds spacing between tasks */
 }
-
+#buttonsAddEdit {
+  display: flex;
+  flex-direction: row;
+  gap:10px;
+}
 label {
   display: block; /* Ensures each task appears on a new line */
 }
