@@ -133,7 +133,8 @@ setTodoCheck(e.target.checked)
 
 function SwitchSaveEdit () {
   const [isEditing, setIsEditing] = useState(false);
-  const [input, setInputName] = useState('new task')
+  const [input, setInputName] = useState('')
+  const [isChecked, setIsChecked] = useState(false);
   let contentToDisplay
 
 
@@ -143,9 +144,11 @@ function SwitchSaveEdit () {
       
   <label>
   <input 
-  value={input}
-  onChange={e => setInputName(e.target.value)} />
-        
+  value={(input==undefined?null:input)}
+onChange={e => setInputName(e.target.value)} 
+/> 
+  
+ 
         </label> 
       <div id="buttonsAddEdit">
       
@@ -161,28 +164,22 @@ let editContent = (
         <input
          
         type="checkbox"
+        checked={isChecked} 
+        onChange={() => setIsChecked(!isChecked)} 
         
       />
-      <span>{input} </span>
+  <span>{input} </span> 
         </label> 
       <div id="buttonsAddEdit">
       
         <button onClick={() => setIsEditing(false)}>Edit</button>
         </div>
         </>
+    
 
 )
-if (!isEditing){
-  contentToDisplay = saveContent 
-}
-else {
-  contentToDisplay = editContent
-}
-return (
-   
- contentToDisplay  
+return isEditing ? editContent : saveContent;
 
-)
     
 }
 
