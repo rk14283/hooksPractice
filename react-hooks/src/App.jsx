@@ -4,39 +4,48 @@ import viteLogo from '/vite.svg'
 import './App.css'
 
 
-const initialTodos = [{id:0, title:'task 1'}, 
- { id:1,
-  title:'task 2'},
-
-{ id:2,
-  title:'task 3'}
-];
-console.log('todos',initialTodos)
 
 
+function TaskList ({ todos,   onDeleteTodo }) {
+ 
 
-function AddTodo () {
-  const [todos, setTodos] = useState(initialTodos);
+
+  return(
+    <>
+    <ul>
+      {/*Here is the problem, I am using todo. title instead of todo*/}
+      {todos.map((todo => (
+        
+      <Task  key={todo.id} todo={todo} 
+      onDelete={onDeleteTodo}
+      
+     
+      />)
+         
+        ))}
+  </ul>
+ </>
+)
+}
+
+function AddTodo ({ onAddTodo }) {
+ 
   const [title, setTitle] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [input, setInputName] = useState('')
   const [isChecked, setIsChecked] = useState(false);
 
   //id of todos
-const newId = todos.length > 0 ? Math.max(...todos.map(t => t.id)) + 1 : 0;
+//const newId = todos.length > 0 ? Math.max(...todos.map(t => t.id)) + 1 : 0;
 
-  function deleteTodo(id) {
-    console.log('delete me', id);
-    setTodos(todos.filter(todo => todo.id !== id));
-  }
+ 
 
   
 
  
   return (
     <>
-    
-
+      
      <input
         placeholder="Add task"
         value={title}
@@ -45,11 +54,7 @@ const newId = todos.length > 0 ? Math.max(...todos.map(t => t.id)) + 1 : 0;
        <button onClick={() => {
 
         setTitle('');
-        setTodos([...todos,{
-          id: newId,
-          title:title
-        }]);
-        
+        onAddTodo(title);
       }}>Add</button>
 
        
@@ -59,7 +64,7 @@ const newId = todos.length > 0 ? Math.max(...todos.map(t => t.id)) + 1 : 0;
 }
  
 
-function Task ( { todo , deleteButton }) {
+function Task ( { todo , onDelete }) {
   const [isEditing, setIsEditing] = useState(false);
   const [input, setInputName] = useState('')
   const [todoCheck, setTodoCheck] = useState(false)
@@ -86,14 +91,16 @@ function strikeThrough (e){
   setTodoCheck(e.target.checked)
 }
 
+console.log('todo id inside Taks', todo.id)
+
 let saveContent  = 
  <>
    
 <label>
       <input
       placeholder="Add task"
-      value={input}
-      checked={isChecked} 
+      value={todo.title}
+      checked={false} 
       onChange={(e) => {
         handleChangeLocal(e);
         checkTheBox(e);
@@ -103,27 +110,28 @@ let saveContent  =
       </label> 
     <div id="buttonsAddEdit">
      
-      <button onClick={() => setIsEditing(true)}>Save</button>
+      <button onClick={() => setIsEditing(false)}>Save</button>
       </div>
       </>   
-
+//Edit is correct save is not
 let editContent   =   
  <>   
 <label>
       <input
       type="checkbox"
-      value={(input==undefined?null:input)}
+      value={(todo.title==undefined?null:todo.title)}
       onChange={(e) => {
         handleChangeLocal(e);
         strikeThrough(e);
       }}
     />
    
-      <span style={{textDecoration: crossDeciderLocal}}>{input}</span>
+      <span style={{textDecoration: crossDeciderLocal}}>{todo.title}</span>
       </label> 
     <div id="buttonsAddEdit">
-      <button onClick={deleteButton}>Delete</button>
-      <button onClick={() => setIsEditing(false)}>Edit</button>
+        {/*Here you don't have a todo*/}
+        <button onClick={() => onDelete(todo.id)}>Delete</button>
+      <button onClick={() => setIsEditing(true)}>Edit</button>
         </div>
        
       </>
@@ -131,14 +139,40 @@ let editContent   =
 
 
 
-return isEditing ? editContent : saveContent;
+return isEditing ? saveContent : editContent;
 
     
 }
 
-
-function App() {
+const initialTodos = [{id:0, title:'task 1'}, 
+  { id:1,
+   title:'task 2'},
  
+ { id:2,
+   title:'task 3'}
+ ];
+ console.log('todos',initialTodos)
+
+
+let nextId = 3;
+function App() {
+  const [todos, setTodos] = useState(initialTodos);
+  function handleAddTodo(title) {
+    setTodos([
+      ...todos,
+      {
+        id: nextId++,
+        title: title,
+        done: false
+      }
+    ]);
+  }
+  function handleDeleteTodo(todoId) {
+    console.log('delete me', todoId);
+    setTodos(
+      todos.filter(t => t.id !== todoId)
+    );
+  }
   
  
   return (
@@ -147,9 +181,13 @@ function App() {
      
         
     <div id="all-checkboxes">
+      <TaskList  todos= {todos}
+      onDeleteTodo={handleDeleteTodo}
+      />
       
-      <Task />
-      <AddTodo />
+     <AddTodo 
+      onAddTodo={handleAddTodo}
+     />
 
         </div>      
       
