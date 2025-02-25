@@ -12,11 +12,16 @@ const initialTodos = [{id:0, title:'task 1'},
   title:'task 3'}
 ];
 console.log('todos',initialTodos)
+
+
+
 function AddTodo () {
   const [todos, setTodos] = useState(initialTodos);
   const [title, setTitle] = useState('');
   const [isEditing, setIsEditing] = useState(false);
-  let todoContent;
+  const [input, setInputName] = useState('')
+  const [isChecked, setIsChecked] = useState(false);
+
   //id of todos
 const newId = todos.length > 0 ? Math.max(...todos.map(t => t.id)) + 1 : 0;
 
@@ -25,20 +30,13 @@ const newId = todos.length > 0 ? Math.max(...todos.map(t => t.id)) + 1 : 0;
     setTodos(todos.filter(todo => todo.id !== id));
   }
 
-  function editTodo(id) {
+  
 
-  }
+ 
   return (
     <>
-     <ul>
-        {todos.map((item => (
-          <Task key = {item.id} todo={item.title} 
-          deleteButton={() => deleteTodo(item.id)}
-          editButton={() => editTodo(item.id)}
-          />)
-         
-        ))}
-      </ul>
+    
+
      <input
         placeholder="Add task"
         value={title}
@@ -53,42 +51,91 @@ const newId = todos.length > 0 ? Math.max(...todos.map(t => t.id)) + 1 : 0;
         }]);
         
       }}>Add</button>
+
        
     </>
+
   )
 }
+ 
 
-function Task ( { todo , deleteButton, editButton }) {
+function Task ( { todo , deleteButton }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [input, setInputName] = useState('')
   const [todoCheck, setTodoCheck] = useState(false)
-  
+  const [title, setTitle] = useState('');
+  const [isChecked, setIsChecked] = useState(false);
 
 let crossDeciderLocal
 let crossLocal = "line-through"
 let noCrossLocal = ""
 todoCheck ? crossDeciderLocal=crossLocal: crossDeciderLocal=noCrossLocal
 
-function handleChangeLocal(e) { 
-setTodoCheck(e.target.checked)
+function handleChangeLocal(e) {
+  
+ setInputName(e.target.value)
+ 
 }
 
+function checkTheBox(e) {
+ 
+  setIsChecked(!isChecked);
+}
 
-  return (
-    <>
+function strikeThrough (e){
+  setTodoCheck(e.target.checked)
+}
+
+let saveContent  = 
+ <>
    
-  <label>
-        <input
-        type="checkbox"
-        onChange={handleChangeLocal}
-      />
-        <span style={{textDecoration: crossDeciderLocal}}>{todo}</span>
-        </label> 
-      <div id="buttonsAddEdit">
-        <button onClick={deleteButton}>Delete</button>
-        <button onClick={editButton}>Edit</button>
+<label>
+      <input
+      placeholder="Add task"
+      value={input}
+      checked={isChecked} 
+      onChange={(e) => {
+        handleChangeLocal(e);
+        checkTheBox(e);
+      }}
+    />
+     {/*<span style={{textDecoration: crossDeciderLocal}}>{input}</span> */}
+      </label> 
+    <div id="buttonsAddEdit">
+     
+      <button onClick={() => setIsEditing(true)}>Save</button>
+      </div>
+      </>   
+
+let editContent   =   
+ <>   
+<label>
+      <input
+      type="checkbox"
+      value={(input==undefined?null:input)}
+      onChange={(e) => {
+        handleChangeLocal(e);
+        strikeThrough(e);
+      }}
+    />
+   
+      <span style={{textDecoration: crossDeciderLocal}}>{input}</span>
+      </label> 
+    <div id="buttonsAddEdit">
+      <button onClick={deleteButton}>Delete</button>
+      <button onClick={() => setIsEditing(false)}>Edit</button>
         </div>
-        </>
-  )
+       
+      </>
+
+
+
+
+return isEditing ? editContent : saveContent;
+
+    
 }
+
 
 function App() {
  
@@ -101,7 +148,9 @@ function App() {
         
     <div id="all-checkboxes">
       
+      <Task />
       <AddTodo />
+
         </div>      
       
      
