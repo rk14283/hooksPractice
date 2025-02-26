@@ -6,9 +6,9 @@ import './App.css'
 
 
 
-function TaskList ({ todos,   onDeleteTodo }) {
+function TaskList ({ todos,   onDeleteTodo, onChangeTodo }) {
  
-
+console.log('these are todos', todos)
 
   return(
     <>
@@ -17,6 +17,7 @@ function TaskList ({ todos,   onDeleteTodo }) {
       {todos.map((todo => (
         
       <Task  key={todo.id} todo={todo} 
+      onChange={onChangeTodo}
       onDelete={onDeleteTodo}
       
      
@@ -31,9 +32,7 @@ function TaskList ({ todos,   onDeleteTodo }) {
 function AddTodo ({ onAddTodo }) {
  
   const [title, setTitle] = useState('');
-  const [isEditing, setIsEditing] = useState(false);
-  const [input, setInputName] = useState('')
-  const [isChecked, setIsChecked] = useState(false);
+  
 
   //id of todos
 //const newId = todos.length > 0 ? Math.max(...todos.map(t => t.id)) + 1 : 0;
@@ -64,7 +63,7 @@ function AddTodo ({ onAddTodo }) {
 }
  
 
-function Task ( { todo , onDelete }) {
+function Task ( { todo , onDelete, onChange }) {
   const [isEditing, setIsEditing] = useState(false);
   const [input, setInputName] = useState('')
   const [todoCheck, setTodoCheck] = useState(false)
@@ -78,7 +77,10 @@ todoCheck ? crossDeciderLocal=crossLocal: crossDeciderLocal=noCrossLocal
 
 function handleChangeLocal(e) {
   
- setInputName(e.target.value)
+  onChange({
+    ...todo,
+    title: e.target.value
+  });
  
 }
 
@@ -99,7 +101,7 @@ let saveContent  =
 <label>
       <input
       placeholder="Add task"
-      value={todo.title}
+     // value={input}
       checked={false} 
       onChange={(e) => {
         handleChangeLocal(e);
@@ -173,7 +175,15 @@ function App() {
       todos.filter(t => t.id !== todoId)
     );
   }
-  
+  function handleChangeTodo(nextTodo) {
+    setTodos(todos.map(t => {
+      if (t.id === nextTodo.id) {
+        return nextTodo;
+      } else {
+        return t;
+      }
+    }));
+  }
  
   return (
     <>
@@ -182,6 +192,7 @@ function App() {
         
     <div id="all-checkboxes">
       <TaskList  todos= {todos}
+      onChangeTodo={handleChangeTodo}
       onDeleteTodo={handleDeleteTodo}
       />
       
