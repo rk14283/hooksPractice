@@ -7,8 +7,53 @@ import './App.css'
 
 
 function TaskList ({ todos,   onDeleteTodo, onChangeTodo }) {
+  //console.log('title of first todo',todos[0].title)
+  let todosTitle =[]
+  function duplicateFinder(todos){
+  for (let i = 0; i < todos.length; i++){
+   console.log(todos[i].title)
+
+   todosTitle.push(todos[i].title)
+  }
+
+   let dupli = todosTitle.filter((value, index) => 
+     todosTitle.indexOf(value) !== index && todosTitle.lastIndexOf(value) === index);
  
-console.log('these are todos', todos)
+ //console.log(dupli);
+ 
+return dupli
+
+
+}
+
+let duplicatedText = duplicateFinder(todos)
+
+console.log('duplicated text',duplicatedText)
+let lastElement = todosTitle[todosTitle.length -1]
+console.log('type of last Element',typeof lastElement)
+ if(duplicatedText.includes(lastElement)){
+  alert(lastElement +` already exists`)
+  
+  }
+
+
+
+
+
+
+
+/*
+ if(dupli[0] != undefined){
+  alert(`${dupli[0]} task already exists`)
+  
+  }
+
+  dupli.length = 0;
+
+*/
+ //console.log(todosTitle)
+
+
 
   return(
     <>
@@ -29,11 +74,35 @@ console.log('these are todos', todos)
 )
 }
 
-function AddTodo ({ onAddTodo }) {
+function AddTodo ({ onAddTodo, todos }) {
  
   const [title, setTitle] = useState('');
   
+   console.log('title of third todo inside add Todos',todos[2].title)
+   console.log('todos length',todos.length)
+   
+   /*
+   let todosTitle =[]
+   function duplicateAlert(todos){
+   for (let i = 0; i < todos.length; i++){
+    console.log(todos[i].title)
 
+    todosTitle.push(todos[i].title)
+
+    let dupli = todosTitle.filter((value, index) => 
+      todosTitle.indexOf(value) !== index && todosTitle.lastIndexOf(value) === index);
+  
+  console.log(dupli);
+if (dupli.length !=0){
+    alert(`${dupli[0]} task already exists`)
+  }
+
+  }
+}
+
+  duplicateAlert(todos)
+  console.log(todosTitle)
+  */
   //id of todos
 //const newId = todos.length > 0 ? Math.max(...todos.map(t => t.id)) + 1 : 0;
 
@@ -153,12 +222,13 @@ const initialTodos = [{id:0, title:'task 1'},
  { id:2,
    title:'task 3'}
  ];
- console.log('todos',initialTodos)
-
+ 
 
 let nextId = 3;
 function App() {
   const [todos, setTodos] = useState(initialTodos);
+  
+ 
   function handleAddTodo(title) {
     setTodos([
       ...todos,
@@ -184,7 +254,7 @@ function App() {
       }
     }));
   }
- 
+
   return (
     <>
      
@@ -198,6 +268,7 @@ function App() {
       
      <AddTodo 
       onAddTodo={handleAddTodo}
+      todos = {todos}
      />
 
         </div>      
