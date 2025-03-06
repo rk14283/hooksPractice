@@ -15,7 +15,7 @@ function App() {
   useEffect(()=>{
     const fetchWeatherData = async (cityName) => {
       try {
-      const url = `https://api.weatherstack.com/current?access_key=eda493856e8c9a32da3b80b811f244c5&query=${cityName}`;
+      const url = `https://api.weatherstack.com/current?access_key=env.key=${cityName}`;
       const response = await fetch(url);
       const data = await response.json();
       setWeatherData(data);
