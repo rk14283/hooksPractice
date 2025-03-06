@@ -7,7 +7,7 @@ import './index.css'
 function App() {
 
 
-  const API_KEY ="57b1fe20064b916ba73ab0d32a949dc1";
+ 
 
   const [weatherData, setWeatherData] = useState(null);
   const [city, setCity] = useState("paris");
