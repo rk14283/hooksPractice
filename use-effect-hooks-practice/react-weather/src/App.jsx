@@ -4,80 +4,105 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import './index.css'
 
+
+
+
 function App() {
 
 
- 
+  const access_key = import.meta.env.VITE_SOME_KEY
+
 
   const [weatherData, setWeatherData] = useState(null);
-  const [city, setCity] = useState("paris");
+  const [city, setCity] = useState("lisbon");
+  const [searchInput, setSearchInput] = useState("");
+  const [submitDetector, setSubmitDetector] = useState(false)
+ 
+ 
+
+  let inputFragment = <>
+  <div className="wrapper">
+  <form onSubmit={handleSearch} className="search-form">
+    <input
+      type="text"
+      value={searchInput}
+      onChange={(e) => setSearchInput(e.target.value)}
+      placeholder="Enter city name"
+      className="search-input"
+      
+    />
+    <button type="submit" className="search-button">
+      Search
+    </button>
+  </form>
+ 
+</div>
+
+</>
+
+
+
+const fetchWeatherData = async (cityName) => {
+  setCity(cityName);
+  console.log('cityName from inside function',cityName)
+  try {
+  const url = `http://api.weatherstack.com/current?access_key=${access_key}&query=${cityName}`;
+  console.log('url', url)
+  const response = await fetch(url);
+  const data = await response.json();
+  setWeatherData(data);
+} catch (error) {
+  console.log(error);
+}
+};
 
   useEffect(()=>{
-    const fetchWeatherData = async (cityName) => {
-      try {
-      const url = `https://api.weatherstack.com/current?access_key=env.key=${cityName}`;
-      const response = await fetch(url);
-      const data = await response.json();
-      setWeatherData(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
+   
   fetchWeatherData(city)
 },[city]);
-console.log(weatherData)
-//info we need: cityName, temprature, condition(clouds), humidity, wind speed
 
-if (weatherData == null)
-{
-  console.log('waiting for data')
-}
-else{
-  console.log('cityName',weatherData.location.name)
-  console.log('temprature',weatherData.current.
-    temperature)
-console.log('condition(clouds)',weatherData.current.weather_descriptions[0])
-console.log('humidity',weatherData.current.humidity)
-console.log('wind speed',weatherData.current.wind_speed)
+
+function handleSearch(e) {
+  e.preventDefault();
+  fetchWeatherData(searchInput);
+  setSubmitDetector(true)
 }
 
-{/*
-console.log('cityName',weatherData.location.name)
-console.log('temprature',weatherData.current.temprature)
-console.log('condition(clouds)',weatherData.current.weather_descriptions[0])
-console.log('humidity',weatherData.current.humidity)
-console.log('wind speed',weatherData.current.windspeed)
-*/
+
+
+
+
+if(submitDetector == true) {
+  inputFragment =     <>
+  <div className="header">
+    <h1 className="city">{weatherData.location.name}</h1>
+    <p className="temperature"> {weatherData.current.temperature}°F</p>
+    <p className="condition">{weatherData.current.weather_descriptions[0]}</p>
+  </div>
+  <div className="weather-details">
+    <div >
+      <p >Humidity</p>
+      <p style={{fontWeight:"bold"}}>{weatherData.current.humidity}%</p>
+    </div>
+    <div>
+      <p>Wind Speed</p>
+      <p style={{fontWeight:"bold", marginRight:50}}>{weatherData.current.wind_speed} mph</p>
+    </div>
+  </div>
+  <div className="forecast">
+  <h2 className="forecast-header">Forecast</h2>
+  <img
+   src={weatherData.current.
+weather_icons
+}
+/>
+  </div>
+</>
 }
 
-let weatherFragment = <div></div>
-if (weatherData == null)
-  {
-    console.log('waiting for data')
-  }
-  else {
-   weatherFragment = 
-    <>
-        <div className="header">
-          <h1 className="city">{weatherData.location.name}</h1>
-          <p className="temperature"> {weatherData.current.temperature}°F</p>
-          <p className="condition">{weatherData.current.weather_descriptions[0]}</p>
-        </div>
-        <div className="weather-details">
-          <div >
-            <p >Humidity</p>
-            <p style={{fontWeight:"bold"}}>{weatherData.current.humidity}%</p>
-          </div>
-          <div>
-            <p>Wind Speed</p>
-            <p style={{fontWeight:"bold", marginRight:50}}>{weatherData.current.wind_speed} mph</p>
-          </div>
-        </div>
-      </>
-  }
+  
   return(
-   weatherFragment
+    inputFragment
     )}
   
 
