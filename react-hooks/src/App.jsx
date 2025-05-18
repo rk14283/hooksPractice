@@ -1,13 +1,21 @@
-import { useState } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import ThemeContext from './ThemeContext'
+
+
+
+
 
 
 
 
 function TaskList ({ todos,   onDeleteTodo, onChangeTodo }) {
+   
   //console.log('title of first todo',todos[0].title)
+  const themeContextValue = useContext(ThemeContext)
+  console.log('themeContext from tasklist',themeContextValue)
   let todosTitle =[]
   function duplicateFinder(todos){
   for (let i = 0; i < todos.length; i++){
@@ -57,6 +65,7 @@ console.log('type of last Element',typeof lastElement)
 
   return(
     <>
+    <div className={themeContextValue}>
     <ul>
       {/*Here is the problem, I am using todo. title instead of todo*/}
       {todos.map((todo => (
@@ -70,6 +79,7 @@ console.log('type of last Element',typeof lastElement)
          
         ))}
   </ul>
+  </div>
  </>
 )
 }
@@ -80,6 +90,8 @@ function AddTodo ({ onAddTodo, todos }) {
   
    console.log('title of third todo inside add Todos',todos[2].title)
    console.log('todos length',todos.length)
+    const themeContextValue = useContext(ThemeContext)
+  console.log('themeContext from add todo',themeContextValue)
    
    /*
    let todosTitle =[]
@@ -113,7 +125,7 @@ if (dupli.length !=0){
  
   return (
     <>
-      
+        <div className={themeContextValue}>
      <input
         placeholder="Add task"
         value={title}
@@ -125,7 +137,7 @@ if (dupli.length !=0){
         onAddTodo(title);
       }}>Add</button>
 
-       
+    </div>   
     </>
 
   )
@@ -226,8 +238,19 @@ const initialTodos = [{id:0, title:'task 1'},
 
 let nextId = 3;
 function App() {
+ const [theme, setTheme] = useState('light');
+ const [backgroundColor, setBackgroundColor] = useState('purple')
+ //This is inefficient, so chatGpt suggests using useEffect
+  //document.body.style.backgroundColor = backgroundColor
   const [todos, setTodos] = useState(initialTodos);
-  
+ 
+    // Run this side effect only when backgroundColor changes
+
+ useEffect(() => {
+    document.body.style.backgroundColor = backgroundColor;
+  }, [backgroundColor]);
+
+
  
   function handleAddTodo(title) {
     setTodos([
@@ -255,11 +278,13 @@ function App() {
     }));
   }
 
+ 
+
   return (
     <>
-     
-     
-        
+    <ThemeContext.Provider value = {theme}>      
+     <div>
+  
     <div id="all-checkboxes">
       <TaskList  todos= {todos}
       onChangeTodo={handleChangeTodo}
@@ -271,13 +296,25 @@ function App() {
       todos = {todos}
      />
 
-        </div>      
-      
-     
+        </div>     
+         <label>
+        <input
+          type="checkbox"
+          checked={theme === 'dark'}
+          onChange={(e) => {
+            setTheme(e.target.checked ? 'dark' : 'light')
+            setBackgroundColor(e.target.checked ?'grey': 'purple')
+          }}
+        />
+        Use dark mode
+      </label>
 
+<br/>
+<br/>
+ 
        
-     
-      
+ </div>    
+</ThemeContext.Provider>       
     </>
   )
 }

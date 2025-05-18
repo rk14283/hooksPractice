@@ -18,8 +18,15 @@
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
-
-
+.dark {
+  background-color: #007acc;
+  
+}
+/*
+body {
+  background-color: black;
+}
+*/
 #all-checkboxes {
   display: flex;
   flex-direction: column;
